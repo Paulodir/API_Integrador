@@ -60,3 +60,4 @@ $route['rest/Login/(:num)'] = 'rest/Login/index/id/$1';
 $route['rest/Bovino/(:num)'] = 'rest/Bovino/index/id/$1';
 $route['rest/Inseminacao/(:num)'] = 'rest/Inseminacao/index/id/$1';
 $route['rest/Ordenha/(:num)'] = 'rest/Ordenha/index/id/$1';
+$route['rest/Partos/(:num)'] = 'rest/Partos/index/id/$1';

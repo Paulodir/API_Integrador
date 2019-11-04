@@ -1,8 +1,8 @@
 <?php
 
-class Inseminacao_Model extends CI_Model {
+class Partos_Model extends CI_Model {
 
-    const table = 'inseminacao';
+    const table = 'partos';
 
     public function getOne($id, $apikey) {
         if ($id > 0) {
