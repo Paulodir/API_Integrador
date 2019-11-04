@@ -54,5 +54,4 @@ class Bovino_Model extends CI_Model {
     }
 
 }
-
 ?>
