@@ -16,6 +16,31 @@ class Inseminacao extends REST_Controller {
         $this->load->model('Inseminacao_Model', 'ins');
     }
 
+    public function teste() {
+        $token = $this->input->get_request_header("token");
+        $id = (int) $this->get('id');
+
+        $post = json_decode(file_get_contents("php://input"));
+
+        if ($id <= 0) {
+            $data = $this->ins->getAll($token);
+            $this->output
+                    ->set_status_header(400)
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        } else {
+            $login = $this->login->get(array('email' => $post->email, 'senha' => $post->senha));
+            if ($login) {
+                $this->output
+                        ->set_status_header(200)
+                        ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            } else {
+                $this->output
+                        ->set_status_header(400)
+                        ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            }
+        }
+    }
+
     public function index_get() {
         $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
@@ -31,7 +56,7 @@ class Inseminacao extends REST_Controller {
         if ((!$this->post('bovino_id')) || (!$this->post('raca_id')) || (!$this->post('data'))) {
             $this->set_response([
                 'status' => false,
-                'error' => 'Campo não preenchidos'
+                'error' => 'Campo(s) não preenchido(s)!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
         }
@@ -43,12 +68,12 @@ class Inseminacao extends REST_Controller {
         if ($this->ins->insert($data)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Inseminação inserida com successo!'
+                'message' => 'Registro de inseminação inserido com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao inserir Inseminação'
+                'error' => 'Falha ao inserir registro de inseminação!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
@@ -58,19 +83,19 @@ class Inseminacao extends REST_Controller {
         if ($id <= 0) {
             $this->set_response([
                 'status' => false,
-                'error' => 'Parâmetros obrigatórios não fornecidos'
+                'error' => 'Informações obrigatórias não fornecidas!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
         }
         if ($this->ins->delete($id)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Inseminação deletada com successo!'
+                'message' => 'Registro de inseminação deletado com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao deletar Inseminação'
+                'error' => 'Falha ao deletar registro de inseminação!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
@@ -80,7 +105,7 @@ class Inseminacao extends REST_Controller {
         if ((!$this->put('bovino_id')) || (!$this->put('raca_id')) || (!$this->put('data')) || ($id <= 0)) {
             $this->set_response([
                 'status' => false,
-                'error' => 'Campo não preenchidos'
+                'error' => 'Campo(s) não preenchido(s)!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
         }
@@ -92,12 +117,12 @@ class Inseminacao extends REST_Controller {
         if ($this->ins->update($id, $data)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Inseminação alterado com successo!'
+                'message' => 'Registro de inseminação alterado com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao alterar Inseminação'
+                'error' => 'Falha ao alterar registro de inseminação!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }

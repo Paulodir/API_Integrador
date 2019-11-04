@@ -9,26 +9,26 @@ require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/REST_Controller_Definitions.php';
 require APPPATH . '/libraries/Format.php';
 
-class Bovino extends REST_Controller {
+class Ordenha extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Bovino_Model', 'bov');
+        $this->load->model('Ordenha_Model', 'ord');
     }
 
     public function index_get() {
         $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
         if ($id <= 0) {
-            $data = $this->bov->getAll($token);
+            $data = $this->ord->getAll($token);
         } else {
-            $data = $this->bov->getOne($id, $token);
+            $data = $this->ord->getOne($id, $token);
         }
         $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
     }
 
     public function index_post() {
-        if ((!$this->post('raca_id')) || (!$this->post('brinco')) || (!$this->post('nome')) || (!$this->post('nascimento')) || (!$this->post('peso')) || (!$this->post('usuario_id'))) {
+        if ((!$this->post('bovino_id')) || (!$this->post('raca_id')) || (!$this->post('data'))) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo(s) não preenchido(s)!'
@@ -36,22 +36,19 @@ class Bovino extends REST_Controller {
             return;
         }
         $data = array(
+            'bovino_id' => $this->post('bovino_id'),
             'raca_id' => $this->post('raca_id'),
-            'brinco' => $this->post('brinco'),
-            'nome' => $this->post('nome'),
-            'nascimento' => $this->post('nascimento'),
-            'peso' => $this->post('peso'),
-            'usuario_id' => $this->post('usuario_id')
+            'data' => $this->post('data')
         );
-        if ($this->bov->insert($data)) {
+        if ($this->ord->insert($data)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Registro de bovino inserido com successo!'
+                'message' => 'Registro de ordenha inserido com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao inserir registro de bovino!'
+                'error' => 'Falha ao inserir registro de ordenha!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
@@ -65,22 +62,22 @@ class Bovino extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
         }
-        if ($this->bov->delete($id)) {
+        if ($this->ord->delete($id)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Registro de bovino deletado com successo!'
+                'message' => 'Registro de ordenha deletado com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao deletar Registro de bovino!'
+                'error' => 'Falha ao deletar registro de ordenha!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
 
     public function index_put() {
         $id = (int) $this->get('id');
-        if ((!$this->put('raca_id')) || (!$this->put('brinco')) || (!$this->put('nome')) || (!$this->put('nascimento')) || (!$this->put('peso')) || (!$this->put('usuario_id')) || ($id <= 0)) {
+        if ((!$this->put('bovino_id')) || (!$this->put('raca_id')) || (!$this->put('data')) || ($id <= 0)) {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo(s) não preenchido(s)!'
@@ -88,22 +85,19 @@ class Bovino extends REST_Controller {
             return;
         }
         $data = array(
+            'bovino_id' => $this->put('bovino_id'),
             'raca_id' => $this->put('raca_id'),
-            'brinco' => $this->put('brinco'),
-            'nome' => $this->put('nome'),
-            'nascimento' => $this->put('nascimento'),
-            'peso' => $this->put('peso'),
-            'usuario_id' => $this->put('usuario_id')
+            'data' => $this->put('data')
         );
-        if ($this->bov->update($id, $data)) {
+        if ($this->ord->update($id, $data)) {
             $this->set_response([
                 'status' => true,
-                'message' => 'Registro de bovino alterado com successo!'
+                'message' => 'Registro de ordenha alterado com successo!'
                     ], REST_Controller_Definitions::HTTP_OK);
         } else {
             $this->set_response([
                 'status' => false,
-                'error' => 'Falha ao alterar registro de bovino!'
+                'error' => 'Falha ao alterar registro de ordenha!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
