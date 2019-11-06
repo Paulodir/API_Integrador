@@ -28,29 +28,30 @@ class Ordenha extends REST_Controller {
     }
 
     public function index_post() {
-        if ((!$this->post('bovino_id')) || (!$this->post('leite')) || (!$this->post('descarte')) || (!$this->post('coleta'))) {
+        if ((!empty($this->post('bovino_id'))) && (!empty($this->post('leite'))) && (($this->post('descarte')) != '') && (!empty($this->post('coleta')))) {
+            $data = array(
+                'bovino_id' => $this->post('bovino_id'),
+                'leite' => $this->post('leite'),
+                'descarte' => $this->post('descarte'),
+                'coleta' => $this->post('coleta')
+            );
+            if ($this->ord->insert($data)) {
+                $this->set_response([
+                    'status' => true,
+                    'message' => 'Registro de ordenha inserido com successo!'
+                        ], REST_Controller_Definitions::HTTP_OK);
+            } else {
+                $this->set_response([
+                    'status' => false,
+                    'error' => 'Falha ao inserir registro de ordenha!'
+                        ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
+            }
+        } else {
             $this->set_response([
                 'status' => false,
                 'error' => 'Campo(s) não preenchido(s)!'
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
             return;
-        }
-        $data = array(
-            'bovino_id' => $this->post('bovino_id'),
-            'leite' => $this->post('leite'),
-            'descarte' => $this->post('descarte'),
-            'coleta' => $this->post('coleta')
-        );
-        if ($this->ord->insert($data)) {
-            $this->set_response([
-                'status' => true,
-                'message' => 'Registro de ordenha inserido com successo!'
-                    ], REST_Controller_Definitions::HTTP_OK);
-        } else {
-            $this->set_response([
-                'status' => false,
-                'error' => 'Falha ao inserir registro de ordenha!'
-                    ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
 

@@ -23,17 +23,20 @@ class Login extends CI_Controller {
         if (empty($post->email) || empty($post->senha)) {
             $this->output
                     ->set_status_header(400)
-                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), 
+                            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         } else {
             $login = $this->login->get(array('email' => $post->email, 'senha' => $post->senha));
             if ($login) {
                 $this->output
                         ->set_status_header(200)
-                        ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email,'token'=>$login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                        ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email,'token'=>$login->apikey), 
+                                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             } else {
                 $this->output
                         ->set_status_header(400)
-                        ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                        ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), 
+                                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             }
         }
     }
@@ -43,7 +46,8 @@ class Login extends CI_Controller {
         if (empty($post->email) || empty($post->senha) || empty($post->nome)) {
             $this->output
                     ->set_status_header(400)
-                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), 
+                            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         } else {
             $insert = $this->login->insert(array('email' => $post->email, 'senha' => $post->senha, 'nome' => $post->nome));
             if ($insert > 0) {
@@ -61,7 +65,8 @@ class Login extends CI_Controller {
             } else {
                 $this->output
                         ->set_status_header(400)
-                        ->set_output(json_encode(array('status' => false, 'error' => 'Falha no cadastro'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+                        ->set_output(json_encode(array('status' => false, 'error' => 'Falha no cadastro'), 
+                                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             }
         }
     }

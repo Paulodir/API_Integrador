@@ -4,6 +4,16 @@ class Partos_Model extends CI_Model {
 
     const table = 'partos';
 
+    public function getAll($apikey) {
+        $this->db->select(self::table . '.*');
+        $this->db->join('bovino', self::table . '.bovino_id = bovino.id', 'inner');
+        $this->db->join('usuario', 'bovino.usuario_id = usuario.id', 'inner');
+        $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+        $this->db->where(array('token.apikey' => $apikey));
+        $query = $this->db->get(self::table);
+        return $query->result();
+    }
+
     public function getOne($id, $apikey) {
         if ($id > 0) {
             $this->db->select(self::table . '.*');
@@ -16,16 +26,6 @@ class Partos_Model extends CI_Model {
         } else {
             return false;
         }
-    }
-
-    public function getAll($apikey) {
-        $this->db->select(self::table . '.*');
-        $this->db->join('bovino', self::table . '.bovino_id = bovino.id', 'inner');
-        $this->db->join('usuario', 'bovino.usuario_id = usuario.id', 'inner');
-        $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
-        $this->db->where(array('token.apikey' => $apikey));
-        $query = $this->db->get(self::table);
-        return $query->result();
     }
 
     public function insert($data = array()) {

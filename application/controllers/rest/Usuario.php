@@ -19,7 +19,7 @@ class Usuario extends REST_Controller {
     public function index_get() {
         $id = (int) $this->get('id');
         if($id <= 0) {
-            $data = $this->us->get();
+            $data = $this->us->getAll();
         } else {
             $data = $this->us->getOne($id);
         }

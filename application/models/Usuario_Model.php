@@ -4,6 +4,11 @@ class Usuario_Model extends CI_Model {
 
     const table = 'usuario';
 
+    public function getAll() {
+        $query = $this->db->get(self::table);
+        return $query->result();
+    }
+
     public function getOne($id) {
         if ($id > 0) {
             $this->db->where('id', $id);
@@ -12,11 +17,6 @@ class Usuario_Model extends CI_Model {
         } else {
             return false;
         }
-    }
-
-    public function get() {
-        $query = $this->db->get(self::table);
-        return $query->result();
     }
 
     public function insert($data = array()) {

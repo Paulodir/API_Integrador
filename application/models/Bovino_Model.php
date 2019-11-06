@@ -4,8 +4,16 @@ class Bovino_Model extends CI_Model {
 
     const table = 'bovino';
 
+    public function getAll($apikey) {
+        $this->db->select(self::table . '.*');
+        $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
+        $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+        $this->db->where(array('token.apikey' => $apikey));
+        $query = $this->db->get(self::table);
+        return $query->result();
+    }
 
- public function getOne($id, $apikey) {
+    public function getOne($id, $apikey) {
         if ($id > 0) {
             $this->db->select(self::table . '.*');
             $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
@@ -17,15 +25,6 @@ class Bovino_Model extends CI_Model {
         } else {
             return false;
         }
-    }
-
-    public function getAll($apikey) {
-        $this->db->select(self::table . '.*');
-        $this->db->join('usuario', self::table .'.usuario_id = usuario.id', 'inner');
-        $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
-        $this->db->where(array('token.apikey' => $apikey));
-        $query = $this->db->get(self::table);
-        return $query->result();
     }
 
     public function insert($data = array()) {
@@ -53,5 +52,21 @@ class Bovino_Model extends CI_Model {
         }
     }
 
+    public function getOneOrdenha($id, $apikey) {
+        if ($id > 0) {
+            $this->db->select(self::table . ".brinco, SUM(leite) AS 'Leite Ordenhado',SUM(descarte) AS 'Leite Descartado',(SUM(leite) - SUM(descarte)) AS total, AVG(leite) AS 'Média Ordenha', AVG(descarte) AS 'Média Descarte'");
+            $this->db->join('ordenha', self::table . '.id = ordenha.bovino_id ' . " AND coleta BETWEEN '2000-01-01' AND '2000-01-31'", 'inner');
+            $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
+            $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+            $this->db->where(array('token.apikey' => $apikey, (self::table) . '.id' => $id));
+            $query = $this->db->get(self::table);
+            //echo $this->db->last_query();exit;
+            return $query->row(0);
+        } else {
+            return false;
+        }
+    }
+
 }
+
 ?>

@@ -15,6 +15,7 @@ class Inseminacao extends REST_Controller {
         parent::__construct();
         $this->load->model('Inseminacao_Model', 'ins');
     }
+
     public function index_get() {
         $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
@@ -100,29 +101,6 @@ class Inseminacao extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
-    //    public function teste() {
-//        $token = $this->input->get_request_header("token");
-//        $id = (int) $this->get('id');
-//
-//        $post = json_decode(file_get_contents("php://input"));
-//
-//        if ($id <= 0) {
-//            $data = $this->ins->getAll($token);
-//            $this->output
-//                    ->set_status_header(400)
-//                    ->set_output(json_encode(array('status' => false, 'error' => 'Preencha todos os campos'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-//        } else {
-//            $login = $this->login->get(array('email' => $post->email, 'senha' => $post->senha));
-//            if ($login) {
-//                $this->output
-//                        ->set_status_header(200)
-//                        ->set_output(json_encode(array('id' => $login->id, 'nome' => $login->nome, 'email' => $login->email, 'token' => $login->apikey), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-//            } else {
-//                $this->output
-//                        ->set_status_header(400)
-//                        ->set_output(json_encode(array('status' => false, 'error' => 'Usuário não encontrado'), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-//            }
-//        }
-//    }
 
 }
+?>
