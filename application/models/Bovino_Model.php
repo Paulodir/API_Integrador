@@ -52,13 +52,26 @@ class Bovino_Model extends CI_Model {
         }
     }
 
-    public function getOneOrdenha($id, $apikey) {
+    public function getOrdenha($apikey,$inicio, $fim){
+        $this->db->select(self::table . ".brinco, SUM(leite) AS 'Leite Ordenhado',SUM(descarte) AS 'Leite Descartado',(SUM(leite) - SUM(descarte)) AS total, AVG(leite) AS 'Média Ordenha', AVG(descarte) AS 'Média Descarte'");
+        $this->db->join('ordenha', self::table . ".id = ordenha.bovino_id AND coleta BETWEEN '".$inicio."' AND '".$fim."'", 'inner');
+        $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
+        $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+        $this->db->where(array('token.apikey' => $apikey));
+        $this->db->group_by('bovino.id');
+        $query = $this->db->get(self::table);
+        echo $this->db->last_query();exit;
+        return $query->result();
+    }
+
+    public function getOneOrdenha($id, $apikey,$inicio, $fim) {
         if ($id > 0) {
-            $this->db->select(self::table . ".brinco, SUM(leite) AS 'Leite Ordenhado',SUM(descarte) AS 'Leite Descartado',(SUM(leite) - SUM(descarte)) AS total, AVG(leite) AS 'Média Ordenha', AVG(descarte) AS 'Média Descarte'");
-            $this->db->join('ordenha', self::table . '.id = ordenha.bovino_id ' . " AND coleta BETWEEN '2000-01-01' AND '2000-01-31'", 'inner');
+            $this->db->select(self::table . ".brinco, COALESCE (bovino.nome,'Vaca') As nome, SUM(leite) AS 'Leite Ordenhado',SUM(descarte) AS 'Leite Descartado',(SUM(leite) - SUM(descarte)) AS total, AVG(leite) AS 'Média Ordenha', AVG(descarte) AS 'Média Descarte'");
+            $this->db->join('ordenha', self::table . ".id = ordenha.bovino_id AND coleta BETWEEN '".$inicio."' AND '".$fim."'", 'inner');
             $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
             $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
             $this->db->where(array('token.apikey' => $apikey, (self::table) . '.id' => $id));
+            $this->db->group_by('bovino.id');
             $query = $this->db->get(self::table);
             //echo $this->db->last_query();exit;
             return $query->row(0);
@@ -67,6 +80,16 @@ class Bovino_Model extends CI_Model {
         }
     }
 
-}
+    public function getRacao($apikey) {
+            $this->db->select(self::table . ".brinco,brinco, COALESCE (bovino.nome,'Vaca'), SUM(leite) AS 'Leite Ordenhado',SUM(descarte) AS 'Leite Descartado',(SUM(leite) - SUM(descarte)) AS total, AVG(leite) AS 'Média Ordenha', AVG(descarte) AS 'Média Descarte'");
+            $this->db->join('ordenha', self::table . ".id = ordenha.bovino_id AND coleta BETWEEN '2000-01-01' AND '2000-01-31'", 'inner');
+            $this->db->join('usuario', self::table . '.usuario_id = usuario.id', 'inner');
+            $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+            $this->db->where(array('token.apikey' => $apikey, (self::table) . '.id' => $id));
+            $query = $this->db->get(self::table);
+            //echo $this->db->last_query();exit;
+            return $query->result();        
+    }
 
+}
 ?>
