@@ -16,26 +16,11 @@ class Bovino extends REST_Controller {
         $this->load->model('Bovino_Model', 'bov');
     }
 
-    public function ordenha_get() {
+    public function index_get() {
         $token = $this->input->get_request_header("token");
         $id = (int) $this->get('id');
-        $POST=  json_decode(file_get_contents("php://input"));
-//        var_dump($POST);
-//
-//
-//echo $POST->inicio;exit;
         if ($id <= 0) {
-            $data = $this->bov->getOrdenha($token,($POST->inicio),($POST->fim));
-        } else {
-            $data = $this->bov->getOneOrdenha($id, $token,($POST->inicio),($POST->fim));
-        }
-        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
-    }
 
-    public function index() {
-        $token = $this->input->get_request_header("token");
-        $id = (int) $this->get('id');
-        if ($id <= 0) {
             $data = $this->bov->getAll($token);
         } else {
             $data = $this->bov->getOne($id, $token);
@@ -123,5 +108,46 @@ class Bovino extends REST_Controller {
                     ], REST_Controller_Definitions::HTTP_BAD_REQUEST);
         }
     }
+
+    public function ordenha_get() {
+        $token = $this->input->get_request_header("token");
+        $id = (int) $this->get('id');
+        $POST = json_decode(file_get_contents("php://input"));
+        //var_dump($POST);
+        //echo $POST->inicio;exit;
+        if ($id <= 0) {
+            $data = $this->bov->getOrdenha($token, ($POST->inicio), ($POST->fim));
+        } else {
+            $data = $this->bov->getOneOrdenha($id, $token, ($POST->inicio), ($POST->fim));
+        }
+        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
+    }
+
+    public function alimentacao_get() {
+        $token = $this->input->get_request_header("token");
+        $id = (int) $this->get('id');
+        //var_dump($POST);
+        //echo $POST->inicio;exit;
+        if ($id <= 0) {
+            $data = $this->bov->getRacao($token);
+        } else {
+            $data = $this->bov->getOneRacao($id, $token);
+        }
+        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
+    }
+    
+    public function resumo_get() {
+        $token = $this->input->get_request_header("token");
+        $id = (int) $this->get('id');
+        //var_dump($POST);
+        //echo $POST->inicio;exit;
+        if ($id <= 0) {
+            $data = $this->bov->getRelatorio($token);
+        } else {
+            $data = $this->bov->getOneRelatorio($id, $token);
+        }
+        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
+    }
+
 
 }

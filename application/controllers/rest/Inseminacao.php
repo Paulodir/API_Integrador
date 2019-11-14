@@ -15,6 +15,19 @@ class Inseminacao extends REST_Controller {
         parent::__construct();
         $this->load->model('Inseminacao_Model', 'ins');
     }
+        public function parto_get() {
+        $token = $this->input->get_request_header("token");
+        $id = (int) $this->get('id');
+        //var_dump($POST);
+        //echo $POST->inicio;exit;
+        if ($id <= 0) {
+            $data = $this->ins->getInseminacaoParto($token);
+        } else {
+            $data = $this->ins->getOneInseminacaoParto($id, $token);
+        }
+        $this->set_response($data, REST_Controller_Definitions::HTTP_OK);
+    }
+
 
     public function index_get() {
         $token = $this->input->get_request_header("token");

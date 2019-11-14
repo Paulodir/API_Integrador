@@ -53,6 +53,42 @@ class Inseminacao_Model extends CI_Model {
         }
     }
 
+    public function getInseminacaoParto($apikey) {
+        $query = $this->db->query("SELECT bovino.nome,bovino.id,
+            (SELECT COUNT(*) FROM inseminacao WHERE bovino.id = inseminacao.bovino_id) AS `inseminacoes`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.`id` = partos.bovino_id AND nascido='1') AS `partos`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.`id` = partos.bovino_id AND nascido='0') AS `abortos`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.id = partos.bovino_id) AS `total` FROM inseminacao
+            INNER JOIN bovino ON bovino.id = inseminacao.bovino_id
+            LEFT  JOIN partos ON bovino.id = partos.bovino_id
+            INNER JOIN usuario ON bovino.usuario_id = usuario.id
+            INNER JOIN token ON token.usuario_id = `usuario`.id
+            WHERE token.apikey = '" . $apikey . "' AND  inseminacao.`data` IS  NOT  NULL
+            GROUP BY bovino.id ORDER BY inseminacoes DESC");
+        //echo $this->db->last_query();exit;
+        return $query->result();
+    }
+
+    public function getOneInseminacaoParto($id, $apikey) {
+        if ($id > 0) {
+            $query = $this->db->query("SELECT bovino.nome,bovino.id,
+            (SELECT COUNT(*) FROM inseminacao WHERE bovino.id = inseminacao.bovino_id) AS `inseminacoes`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.`id` = partos.bovino_id AND nascido='1') AS `partos`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.`id` = partos.bovino_id AND nascido='0') AS `abortos`,
+            (SELECT COUNT(*) FROM partos WHERE bovino.id = partos.bovino_id) AS `total` FROM inseminacao
+            INNER JOIN bovino ON bovino.id = inseminacao.bovino_id
+            LEFT  JOIN partos ON bovino.id = partos.bovino_id
+            INNER JOIN usuario ON bovino.usuario_id = usuario.id
+            INNER JOIN token ON token.usuario_id = `usuario`.id
+            WHERE token.apikey = '" . $apikey . "' AND bovino.id=" . $id . " AND  inseminacao.`data` IS  NOT  NULL
+            GROUP BY bovino.id ORDER BY inseminacoes DESC");
+            //echo $this->db->last_query();exit;
+            return $query->row(0);
+        } else {
+            return false;
+        }
+    }
+
 }
 
 ?>

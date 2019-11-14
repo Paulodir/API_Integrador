@@ -51,8 +51,8 @@ class Login extends CI_Controller {
         } else {
             $insert = $this->login->insert(array('email' => $post->email, 'senha' => $post->senha, 'nome' => $post->nome));
             if ($insert > 0) {
-                $newToken = md5('salt'.$insert);
-                $this->login->insertApiKey(array('usuario_id' => $insert, 'apikey' =>$newToken));
+                $novoToken = md5('gesbov'.$insert);
+                $this->login->insertApiKey(array('usuario_id' => $insert, 'apikey' =>$novoToken));
                 $this->output
                         ->set_status_header(200)
                         ->set_output(json_encode(
@@ -60,7 +60,7 @@ class Login extends CI_Controller {
                                     'id' => "$insert",
                                     'email' => $post->email,
                                     'nome' => $post->nome,
-                                    'token' =>$newToken
+                                    'token' =>$novoToken
                         ), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
             } else {
                 $this->output

@@ -11,6 +11,7 @@ class Ordenha_Model extends CI_Model {
         $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
         $this->db->where(array('token.apikey' => $apikey));
         $query = $this->db->get(self::table);
+        //echo $this->db->last_query();exit;
         return $query->result();
     }
 
