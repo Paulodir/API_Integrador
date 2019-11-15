@@ -27,8 +27,22 @@ class Bovino_Model extends CI_Model {
         }
     }
 
+    public function verificaUsuario($apikey) {
+        if ($apikey != '') {
+            $this->db->select('token.*');
+            $this->db->join('token', 'token.usuario_id = usuario.id', 'inner');
+            $this->db->where(array('token.apikey' => $apikey));
+            $query = $this->db->get('usuario');
+            echo $this->db->last_query();exit;
+            return $query->row(0);
+        } else {
+            return false;
+        }
+    }
+
     public function insert($data = array()) {
         $this->db->insert(self::table, $data);
+        //echo $this->db->last_query();exit;
         return $this->db->affected_rows();
     }
 
